@@ -1,0 +1,220 @@
+{
+  "input": {
+    "workflow": {
+      "1": {
+        "inputs": {
+          "ckpt_name": "flux1-dev-fp8.safetensors"
+        },
+        "class_type": "CheckpointLoaderSimple",
+        "_meta": {
+          "title": "CheckpointLoaderSimple"
+        }
+      },
+      "2": {
+        "inputs": {
+          "lora_name": "photorealistic_skin_flux_v2.safetensors",
+          "strength_model": 0.8,
+          "strength_clip": 0.8,
+          "model": [
+            "1",
+            0
+          ],
+          "clip": [
+            "1",
+            1
+          ]
+        },
+        "class_type": "LoraLoader",
+        "_meta": {
+          "title": "LoraLoader"
+        }
+      },
+      "3": {
+        "inputs": {
+          "text": "photorealistic portrait of a beautiful woman, detailed skin texture, natural pores, subsurface scattering, 8k, professional photography",
+          "clip": [
+            "2",
+            1
+          ]
+        },
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+          "title": "Positive Prompt"
+        }
+      },
+      "4": {
+        "inputs": {
+          "text": "ugly, deformed, blurry, low quality, text, watermark, bad anatomy, bad hands, extra fingers, plastic skin",
+          "clip": [
+            "2",
+            1
+          ]
+        },
+        "class_type": "CLIPTextEncode",
+        "_meta": {
+          "title": "Negative Prompt"
+        }
+      },
+      "5": {
+        "inputs": {
+          "value": 3.5,
+          "conditioning": [
+            "3",
+            0
+          ]
+        },
+        "class_type": "FluxGuidance",
+        "_meta": {
+          "title": "FluxGuidance"
+        }
+      },
+      "6": {
+        "inputs": {
+          "width": 1024,
+          "height": 1536,
+          "batch_size": 1
+        },
+        "class_type": "EmptySD3LatentImage",
+        "_meta": {
+          "title": "EmptySD3LatentImage"
+        }
+      },
+      "7": {
+        "inputs": {
+          "seed": 42,
+          "steps": 25,
+          "cfg": 1,
+          "sampler_name": "euler",
+          "scheduler": "simple",
+          "denoise": 1,
+          "model": [
+            "15",
+            0
+          ],
+          "positive": [
+            "5",
+            0
+          ],
+          "negative": [
+            "4",
+            0
+          ],
+          "latent_image": [
+            "6",
+            0
+          ]
+        },
+        "class_type": "KSampler",
+        "_meta": {
+          "title": "KSampler"
+        }
+      },
+      "8": {
+        "inputs": {
+          "samples": [
+            "7",
+            0
+          ],
+          "vae": [
+            "1",
+            2
+          ]
+        },
+        "class_type": "VAEDecode",
+        "_meta": {
+          "title": "VAEDecode"
+        }
+      },
+      "9": {
+        "inputs": {
+          "model_name": "4x-UltraSharp.pth"
+        },
+        "class_type": "UpscaleModelLoader",
+        "_meta": {
+          "title": "UpscaleModelLoader"
+        }
+      },
+      "10": {
+        "inputs": {
+          "upscale_model": [
+            "9",
+            0
+          ],
+          "image": [
+            "8",
+            0
+          ]
+        },
+        "class_type": "ImageUpscaleWithModel",
+        "_meta": {
+          "title": "ImageUpscaleWithModel"
+        }
+      },
+      "11": {
+        "inputs": {
+          "filename_prefix": "ComfyUI",
+          "images": [
+            "10",
+            0
+          ]
+        },
+        "class_type": "SaveImage",
+        "_meta": {
+          "title": "SaveImage"
+        }
+      },
+      "12": {
+        "inputs": {
+          "image": "reference.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "LoadImage"
+        }
+      },
+      "13": {
+        "inputs": {
+          "filename": "sigclip_vision_patch14_384.safetensors"
+        },
+        "class_type": "CLIPVisionLoader",
+        "_meta": {
+          "title": "CLIPVisionLoader"
+        }
+      },
+      "14": {
+        "inputs": {
+          "filename": "ip-adapter.bin"
+        },
+        "class_type": "LoadIPAdapterFlux",
+        "_meta": {
+          "title": "LoadIPAdapterFlux"
+        }
+      },
+      "15": {
+        "inputs": {
+          "value": 1,
+          "model": [
+            "2",
+            0
+          ],
+          "ip_adapter": [
+            "14",
+            0
+          ],
+          "image": [
+            "12",
+            0
+          ],
+          "clip_vision": [
+            "13",
+            0
+          ]
+        },
+        "class_type": "ApplyIPAdapterFlux",
+        "_meta": {
+          "title": "ApplyIPAdapterFlux"
+        }
+      }
+    }
+  }
+}
