@@ -1,9 +1,10 @@
 FROM runpod/worker-comfyui:5.5.1-base
 
-# Custom nodes
+# Custom nodes (v2: IPAdapter + LoadImageBase64 tooling nodes)
 RUN cd /comfyui/custom_nodes && \
     git clone https://github.com/Shakker-Labs/ComfyUI-IPAdapter-Flux.git && \
-    git clone https://github.com/Acly/comfyui-tooling-nodes.git
+    git clone https://github.com/Acly/comfyui-tooling-nodes.git && \
+    ls -la /comfyui/custom_nodes/comfyui-tooling-nodes/
 
 # FLUX UNet (fp8)
 RUN mkdir -p /comfyui/models/diffusion_models && \
