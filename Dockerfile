@@ -15,10 +15,10 @@ RUN mkdir -p /comfyui/models/clip && \
     wget -q --show-progress -O /comfyui/models/clip/t5xxl_fp8_e4m3fn.safetensors \
     "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors"
 
-# FLUX VAE
+# FLUX VAE (mirror — original is gated on black-forest-labs)
 RUN mkdir -p /comfyui/models/vae && \
     wget -q --show-progress -O /comfyui/models/vae/ae.safetensors \
-    "https://huggingface.co/black-forest-labs/FLUX.1-dev/resolve/main/ae.safetensors"
+    "https://huggingface.co/cocktailpeanut/xulf-dev/resolve/main/ae.safetensors"
 
 # IPAdapter model + CLIP Vision
 RUN mkdir -p /comfyui/models/ipadapter && \
